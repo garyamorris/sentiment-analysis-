@@ -1,4 +1,4 @@
-import https from "node:https";
+import { Agent } from "undici";
 
 export interface HueConfig {
   bridgeIp: string;
@@ -14,11 +14,15 @@ export interface HueCommand {
 
 export class HueClient {
   private baseUrl: string;
-  private agent: https.Agent;
+  private dispatcher: Agent;
 
   constructor(private config: HueConfig) {
     this.baseUrl = `https://${config.bridgeIp}/clip/v2/resource`;
-    this.agent = new https.Agent({ rejectUnauthorized: false });
+    this.dispatcher = new Agent({
+      connect: {
+        rejectUnauthorized: false
+      }
+    });
   }
 
   async setLights(command: HueCommand) {
@@ -44,7 +48,7 @@ export class HueClient {
         "hue-application-key": this.config.appKey
       },
       body: JSON.stringify(body),
-      agent: this.agent
+      dispatcher: this.dispatcher
     });
 
     if (!response.ok) {

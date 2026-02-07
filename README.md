@@ -22,7 +22,7 @@ This project is a reference CLI that streams live microphone audio to Hume.ai, r
    - `HUME_CONFIG_ID`: Optional Hume config ID
    - `HUE_BRIDGE_IP`: Hue Bridge IP address
    - `HUE_APP_KEY`: Hue application key (username)
-   - `HUE_LIGHT_IDS`: Comma-separated list of light IDs to control
+   - `HUE_LIGHT_IDS`: Comma-separated list of Hue v2 light resource IDs (UUIDs) to control
 
 ## Getting Hume credentials
 - Create an account at https://hume.ai
@@ -37,6 +37,13 @@ This project is a reference CLI that streams live microphone audio to Hume.ai, r
      -d '{"devicetype":"hume-hue#cli"}'
    ```
 3. Copy the `username` from the response and use it as `HUE_APP_KEY`.
+
+## Finding Hue v2 light IDs
+Use the v2 API to list light resources and copy the `id` values:
+```bash
+curl -k https://<HUE_BRIDGE_IP>/clip/v2/resource/light \
+  -H "hue-application-key: <HUE_APP_KEY>"
+```
 
 ## Run
 ```bash
